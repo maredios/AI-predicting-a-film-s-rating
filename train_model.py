@@ -1,39 +1,68 @@
+# train_model.py
 import os
 import time
-import pandas as pd
+import pickle
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
 from tqdm import tqdm
 import xgboost as xgb
 
-from feature_engineering import preprocess_data
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+from feature_engineering import (
+    preprocess_data,
+    save_encoders,
+)
 
 
 def train_model(clean_dataset_path="data/movies_dataset_clean.csv"):
 
-    # Create folders if missing
+    # ------------------------------------------------------------
+    # Directories
+    # ------------------------------------------------------------
     os.makedirs("logs", exist_ok=True)
     os.makedirs("models", exist_ok=True)
+    os.makedirs("plots", exist_ok=True)
 
     log_path = "logs/training_log.txt"
+    encoders_path = "models/encoders.pkl"
+    model_path = "models/movie_xgb.json"
+    curve_path = "plots/learning_curve.png"
 
-    # -------------------------------------------------------------------------
-    # 1. Load dataset
-    # -------------------------------------------------------------------------
+    # ------------------------------------------------------------
+    # Load clean dataset
+    # ------------------------------------------------------------
     print("Loading clean dataset...")
     df = pd.read_csv(clean_dataset_path)
 
-    # -------------------------------------------------------------------------
-    # 2. Feature engineering
-    # -------------------------------------------------------------------------
-    print("Preparing features...")
-    X, y = preprocess_data(df)
+    # ------------------------------------------------------------
+    # Feature engineering + encoders
+    # ------------------------------------------------------------
+    print("Preparing encoders and features...")
 
-    # Convert to DMatrix for xgboost.train()
-    dtrain = xgb.DMatrix(X, label=y)
+    # preprocess_data builds encoders + returns X,y
+    X, y, encoders = preprocess_data(df, encoders_path)
 
-    # -------------------------------------------------------------------------
-    # 3. XGBoost parameters (PRO Version)
-    # -------------------------------------------------------------------------
+    # Save encoders to file
+    save_encoders(encoders, encoders_path)
+
+    # ------------------------------------------------------------
+    # Train/test split
+    # ------------------------------------------------------------
+    print("Splitting train/test (80/20)...")
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.20, random_state=42
+    )
+
+    dtrain = xgb.DMatrix(X_train, label=y_train)
+    dtest = xgb.DMatrix(X_test, label=y_test)
+
+    # ------------------------------------------------------------
+    # XGBoost parameters
+    # ------------------------------------------------------------
     params = {
         "objective": "reg:squarederror",
         "eval_metric": "rmse",
@@ -43,37 +72,22 @@ def train_model(clean_dataset_path="data/movies_dataset_clean.csv"):
         "colsample_bytree": 0.8,
     }
 
-    num_rounds = 300  # Number of trees
-
-    # Log file
-    with open(log_path, "w", encoding="utf-8") as log:
-        log.write("=== TRAINING LOG ===\n")
-        log.write(f"Dataset size: {X.shape}\n")
-        log.write(f"Start time: {time.ctime()}\n")
-        log.write(f"Number of boosting rounds: {num_rounds}\n\n")
-
+    num_rounds = 300
     print(f"Training model ({num_rounds} trees)...")
 
-    # -------------------------------------------------------------------------
-    # 4. Manual training loop with TQDM
-    # -------------------------------------------------------------------------
+    # ------------------------------------------------------------
+    # Training loop + RMSE tracking
+    # ------------------------------------------------------------
     booster = None
-    start_time = time.time()
+    start = time.time()
 
-    # TQDM progress bar
-    pbar = tqdm(
-        total=num_rounds,
-        desc="Training XGBoost",
-        ncols=100,
-        dynamic_ncols=True
-    )
+    train_rmse_list = []
+    test_rmse_list = []
 
-    tree_times = []
+    pbar = tqdm(total=num_rounds, desc="Training XGBoost", ncols=100, dynamic_ncols=True)
 
     for i in range(num_rounds):
-        t0 = time.time()
 
-        # Train 1 boosting iteration
         booster = xgb.train(
             params=params,
             dtrain=dtrain,
@@ -81,39 +95,63 @@ def train_model(clean_dataset_path="data/movies_dataset_clean.csv"):
             xgb_model=booster
         )
 
-        t1 = time.time()
-        iteration_time = t1 - t0
-        tree_times.append(iteration_time)
+        # Predictions for RMSE
+        train_pred = booster.predict(dtrain)
+        test_pred = booster.predict(dtest)
 
-        # Update progress bar
+        train_rmse = np.sqrt(mean_squared_error(y_train, train_pred))
+        test_rmse  = np.sqrt(mean_squared_error(y_test, test_pred))
+
+
+        train_rmse_list.append(train_rmse)
+        test_rmse_list.append(test_rmse)
+
         pbar.set_postfix({
-            "tree_time": f"{iteration_time:.3f}s",
-            "avg": f"{np.mean(tree_times):.3f}s",
-            "eta": f"{(num_rounds - (i+1)) * np.mean(tree_times):.1f}s"
+            "train_RMSE": f"{train_rmse:.3f}",
+            "test_RMSE": f"{test_rmse:.3f}",
         })
         pbar.update(1)
 
     pbar.close()
-    total_time = time.time() - start_time
+    total_time = time.time() - start
 
-    # -------------------------------------------------------------------------
-    # 5. Save model
-    # -------------------------------------------------------------------------
-    model_path = "models/movie_xgb.json"
+    # ------------------------------------------------------------
+    # Save model & logs
+    # ------------------------------------------------------------
     booster.save_model(model_path)
 
-    # -------------------------------------------------------------------------
-    # 6. Save logs
-    # -------------------------------------------------------------------------
-    with open(log_path, "a", encoding="utf-8") as log:
-        log.write("\n=== TRAINING COMPLETED ===\n")
-        log.write(f"Total time: {total_time:.2f} seconds\n")
-        log.write(f"Average tree time: {np.mean(tree_times):.4f} seconds\n")
-        log.write(f"Model saved to: {model_path}\n")
+    with open(log_path, "w", encoding="utf-8") as f:
+        f.write("=== TRAINING LOG ===\n")
+        f.write(f"Dataset size: {X.shape}\n")
+        f.write(f"Training duration: {total_time:.2f} sec\n")
+        f.write(f"Final Train RMSE: {train_rmse_list[-1]:.4f}\n")
+        f.write(f"Final Test  RMSE: {test_rmse_list[-1]:.4f}\n")
+        f.write(f"Model saved at: {model_path}\n")
+        f.write(f"Encoders saved at: {encoders_path}\n")
 
-    print(f"\nTraining finished in {total_time:.2f} seconds.")
-    print(f"Model saved ➜ {model_path}")
-    print(f"Logs saved ➜ {log_path}")
+    print(f"\nTraining finished in {total_time:.2f}s")
+    print(f"Final Train RMSE: {train_rmse_list[-1]:.4f}")
+    print(f"Final Test  RMSE: {test_rmse_list[-1]:.4f}")
+    print(f"Model saved → {model_path}")
+    print(f"Encoders saved → {encoders_path}")
+    print(f"Log saved → {log_path}")
+
+    # ------------------------------------------------------------
+    # Learning Curve plot
+    # ------------------------------------------------------------
+    plt.figure(figsize=(10, 6))
+    plt.plot(train_rmse_list, label="Train RMSE")
+    plt.plot(test_rmse_list, label="Test RMSE")
+    plt.xlabel("Boosting Rounds (Trees)")
+    plt.ylabel("RMSE")
+    plt.title("Learning Curve (RMSE)")
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(curve_path)
+    plt.close()
+
+    print(f"Learning curve saved → {curve_path}")
 
 
 if __name__ == "__main__":
