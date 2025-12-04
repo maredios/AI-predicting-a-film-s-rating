@@ -18,7 +18,7 @@ def evaluate_existing_movie(title):
     # Check if movie exists
     row = df[df["title"].str.lower() == title.lower()]
     if row.empty:
-        print(f"❌ Film introuvable dans le dataset : {title}")
+        print(f"❌ Film not found in the dataset : {title}")
         return
 
     movie = row.iloc[0].to_dict()
@@ -36,14 +36,13 @@ def evaluate_existing_movie(title):
 
     pred = booster.predict(dmatrix)[0]
 
-    print("\n===== EVALUATION DU FILM =====")
-    print(f"Titre : {title}")
-    print(f"Note réelle      : {true_rating:.2f}")
-    print(f"Note prédite     : {pred:.2f}")
-    print(f"Erreur (RMSE-like): {abs(pred - true_rating):.3f}\n")
-
+    print("\n===== MOVIE EVALUATION =====")
+    print(f"Title: {title}")
+    print(f"True rating      : {true_rating:.2f}")
+    print(f"Predicted rating : {pred:.2f}")
+    print(f"Error (RMSE-like): {abs(pred - true_rating):.3f}\n")
 
 if __name__ == "__main__":
-    print("=== Tester un film ===")
-    film = input("Titre du film : ").strip()
-    evaluate_existing_movie(film)
+    print("=== Test a movie ===")
+    movie = input("Title of the movie: ").strip()
+    evaluate_existing_movie(movie)

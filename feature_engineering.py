@@ -9,12 +9,12 @@ from sklearn.preprocessing import MultiLabelBinarizer, OneHotEncoder
 
 
 # -------------------------------------------------------------
-# 🔧 Utils
+#  Utils
 # -------------------------------------------------------------
 def _split_field(x):
     """
-    Convertit 'A-B-C' → ['A','B','C'].
-    Gère NaN, None ou valeurs vides.
+    Convert 'A-B-C' → ['A','B','C'].
+    Handles NaN, None, or empty values.
     """
     if isinstance(x, str) and len(x) > 0:
         return x.split("-")
@@ -23,7 +23,7 @@ def _split_field(x):
 
 def save_encoders(encoders, path: str):
     """
-    Sauvegarde tous les encodeurs dans un fichier pickle.
+    Save all encoders to a pickle file.
     """
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "wb") as f:
@@ -32,19 +32,19 @@ def save_encoders(encoders, path: str):
 
 def load_encoders(path: str):
     """
-    Charge les encodeurs précédemment sauvegardés.
+    Load previously saved encoders.
     """
     with open(path, "rb") as f:
         return pickle.load(f)
 
 
 # -------------------------------------------------------------
-# 🏗️ 1. Construction des encodeurs (training)
+#  1. Construction of encoders (training)
 # -------------------------------------------------------------
 def build_encoders(df: pd.DataFrame):
     """
-    Construit tous les encodeurs : genres, cast, companies, langues, TF-IDF.
-    Retourne un dictionnaire complet.
+    Build all encoders: genres, cast, companies, languages, TF-IDF.
+    Return a complete dictionary.
     """
 
     encoders = {}
@@ -67,7 +67,7 @@ def build_encoders(df: pd.DataFrame):
     mlb_companies.fit(comp_list)
     encoders["companies"] = mlb_companies
 
-    # Langues
+    # Languages
     ohe_lang = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
     ohe_lang.fit(df[["original_language"]])
     encoders["language"] = ohe_lang
@@ -81,11 +81,11 @@ def build_encoders(df: pd.DataFrame):
 
 
 # -------------------------------------------------------------
-# 🔄 2. Transformation dataset complet (training)
+#  2. Transformation dataset complet (training)
 # -------------------------------------------------------------
 def transform_with_encoders(df: pd.DataFrame, encoders: dict):
     """
-    Transforme df en X,y en utilisant les encodeurs déjà entraînés.
+    Transform df into X,y using already trained encoders.
     """
 
     genres_list = df["genres"].apply(_split_field)
@@ -97,16 +97,16 @@ def transform_with_encoders(df: pd.DataFrame, encoders: dict):
     cast_encoded = encoders["credits"].transform(cast_list)
     companies_encoded = encoders["companies"].transform(comp_list)
 
-    # Langue
+    # Language
     lang_encoded = encoders["language"].transform(df[["original_language"]])
 
     # TF-IDF
     overview_encoded = encoders["tfidf"].transform(df["overview"].fillna("")).toarray()
 
-    # Numérique
+    # Numeric
     numeric = df[["budget", "revenue", "runtime", "popularity", "vote_count"]].values
 
-    # Concaténation
+    # Concatenation
     X = np.hstack([
         numeric,
         genres_encoded,
@@ -122,14 +122,14 @@ def transform_with_encoders(df: pd.DataFrame, encoders: dict):
 
 
 # -------------------------------------------------------------
-# 🚀 3. Pipeline training complet : build + transform + save
+#  3. Complete training pipeline: build + transform + save
 # -------------------------------------------------------------
 def preprocess_data(df: pd.DataFrame, encoders_path: str | None = None):
     """
-    Pipeline complet :
-        - construit les encodeurs
-        - transforme df en X,y
-        - sauvegarde les encodeurs si chemin fourni
+    Complete pipeline:
+        - build encoders
+        - transform df into X,y
+        - save encoders if path provided
     """
     encoders = build_encoders(df)
     X, y = transform_with_encoders(df, encoders)
@@ -141,11 +141,11 @@ def preprocess_data(df: pd.DataFrame, encoders_path: str | None = None):
 
 
 # -------------------------------------------------------------
-# 🎬 4. Préparation d’un seul film (prediction)
+#  4. Preparation of a single movie (prediction)
 # -------------------------------------------------------------
 def preprocess_single_input(movie: dict, encoders: dict):
     """
-    Transforme un film *non existant* (dict) en vecteur X prêt pour prédiction.
+    Transform a *non-existing* movie (dict) into a vector X ready for prediction.
     """
 
     numeric = np.array([
@@ -156,7 +156,7 @@ def preprocess_single_input(movie: dict, encoders: dict):
         movie.get("vote_count", 0),
     ]).reshape(1, -1)
 
-    # Encodages multilabel
+    # Multilabel encodings
     genres = _split_field(movie.get("genres", ""))
     cast = _split_field(movie.get("credits", ""))
     companies = _split_field(movie.get("production_companies", ""))
@@ -165,14 +165,14 @@ def preprocess_single_input(movie: dict, encoders: dict):
     cast_enc = encoders["credits"].transform([cast])
     comp_enc = encoders["companies"].transform([companies])
 
-    # Langue
+    # Language
     lang_enc = encoders["language"].transform([[movie.get("original_language", "en")]])
 
     # TF-IDF overview
     overview = movie.get("overview", "")
     overview_enc = encoders["tfidf"].transform([overview]).toarray()
 
-    # Concaténation finale
+    # Final concatenation
     X = np.hstack([
         numeric,
         genres_enc,

@@ -1,6 +1,6 @@
 === TRAINING LOG ===
 Dataset size: (9270, 166663)
-Training duration: 2038.03 sec
+Training duration: 2443.24 sec
 Final Train RMSE: 0.4494
 Final Test  RMSE: 0.7859
 Model saved at: models/movie_xgb.json
