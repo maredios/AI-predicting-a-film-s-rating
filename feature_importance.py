@@ -72,7 +72,7 @@ def compute_feature_importance():
 
     # Save to CSV
     out_df = pd.DataFrame(importances, columns=["feature", "importance"])
-    out_df.to_csv("feature_importance_words.csv", index=False)
+    out_df.to_csv("data/feature_importance_words.csv", index=False)
 
     print("\nFeature importance saved to feature_importance_words.csv")
     print("\nTop 20 features:")
