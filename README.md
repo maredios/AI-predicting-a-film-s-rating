@@ -3,7 +3,7 @@
 Théo Przybylski, Computer Science Department, Hanyang University, matameltheo@gmail.com  
 Antoine Maia-Sudre, Computer Science Department, Hanyang University, antoine.maia05@gmail.com  
 Joel Suhner, Finance Department, Hanyang University, joel.suhner@gmail.com  
-Yannick Matteo Reichle, Computer Science Department, Hanyang University, email.com  
+Yannick Matteo Reichle, Information Systems Department, Hanyang University, yannick.reichle@gmail.com  
 
 ## Table of Contents
 
