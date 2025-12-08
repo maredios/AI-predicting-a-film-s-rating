@@ -10,27 +10,26 @@ Yannick Matteo Reichle, Information Systems Department, Hanyang University, yann
 
 [II. Datasets]()  
 
-[III. Methodology](#iii-methodology)  
+[III. Methodology]()  
 
-[IV. Evaluation & Analysis](#iv-evaluation--analysis)  
-- [Graphs, Tables, Statistics](#graphs-tables-statistics)  
+[IV. Evaluation & Analysis]()
 
-[V. Installation & Setup Guide]()  
+[V. Conclusion]()  
 
-[VI. Conclusion](#vi-conclusion)  
-- [Discussion](#discussion)
+[VI. Installation & Setup Guide]()  
+
 
 ---
 
 # I. Introduction 
 
 ## Motivation
-The central motivation for choosing this project was to create a practical example of a complete machine learning workflow using a real-world dataset. Movie data is well-suited for this purpose because it contains a variety of feature types-numerical values, categorical labels, multi-label lists, and free text-allowing us to demonstrate how different preprocessing techniques can be combined in one pipeline.
+The central motivation for choosing this project was to create a practical example of a complete machine learning workflow using a real-world dataset. Movie data is well-suited for this purpose because it contains a variety of feature types-numerical values, categorical labels, multi-label lists and free text-allowing us to demonstrate how different preprocessing techniques can be combined in one pipeline.
 
 We selected movie rating prediction specifically because it provides:
 
 - a clear target variable that is easy to interpret,  
-- a broad selection of input attributes such as genres, cast, companies, language, and a text overview,  
+- a broad selection of input attributes such as genres, cast, companies, language and a text overview,  
 - a realistic application scenario commonly used in media-related machine learning,  
 - and a manageable problem size that makes it feasible to build the full workflow end-to-end.
 
@@ -38,7 +37,7 @@ We selected movie rating prediction specifically because it provides:
 By the end of the project, the goal is to deliver a complete system that can estimate a movie’s rating based on its metadata. This includes:
 
 - **A cleaned dataset** where incomplete or invalid records are removed and only relevant fields remain.  
-- **A preprocessing pipeline** that performs basic text vectorization, encodes categorical and multi-label fields, and normalizes numerical values into a feature matrix.  
+- **A preprocessing pipeline** that performs basic text vectorization, encodes categorical and multi-label fields and normalizes numerical values into a feature matrix.  
 - **A trained regression model** that uses this feature matrix to produce stable rating predictions.  
 - **General evaluation outputs** that reflect the model’s training behavior and prediction quality.  
 - **A simple prediction interface** that allows movie metadata to be entered and evaluated directly.
@@ -47,8 +46,7 @@ By the end of the project, the goal is to deliver a complete system that can est
 
 # II. Datasets
 
-The dataset used in this project is a cleaned movie metadata collection obtained from a public source on Hugging Face:  
-https://huggingface.co/datasets/wykonos/movies  
+The dataset used in this project is a cleaned movie metadata collection obtained from a public source on Hugging Face: https://huggingface.co/datasets/wykonos/movies  
 
 It contains information about films such as genres, actors, production companies, language, financial details and audience ratings. The raw dataset was processed to remove incomplete or inconsistent entries, resulting in a structured CSV file suitable for machine learning tasks.
 
@@ -175,12 +173,103 @@ The result is a practical and balanced approach that avoids unnecessary complexi
 
 # IV. Evaluation & Analysis
 
-## Graphs, Tables, Statistics
+The evaluation of this project focuses on two main aspects: the learning behavior of the model during training and the contribution of individual features to the prediction outcome.
+
+## 1. Learning Curve
+
+The learning curve visualizes how the Root Mean Squared Error (RMSE) evolves across 300 boosting rounds. Both the training and test RMSE are recorded after each iteration. This allows an assessment of model convergence and helps identify potential overfitting.
+
+The plot below shows the training and validation RMSE:
+
+![Learning Curve](plots/learning_curve.png)
+
+### Interpretation
+
+- The training RMSE decreases continuously and reaches values below 0.50.
+- The test RMSE decreases rapidly in the early rounds and stabilizes around 0.79.
+- The gap between train and test RMSE indicates mild overfitting, which is expected in boosted tree models but remains within acceptable limits.
+- The test curve flattens around iteration 150, suggesting that additional boosting rounds provide diminishing returns.
+
+Overall, the learning curve shows that the model learns steadily and works well on new, unseen data.
+
+---
+
+## 2. Feature Importance Analysis
+
+To better understand which metadata attributes most strongly influence the predicted rating, a feature importance analysis was conducted based on the trained XGBoost model. The process reconstructs the exact feature names produced during preprocessing and aligns them with XGBoost’s internal importance scores.
+
+### Method
+
+The analysis follows these steps:
+
+1. Load the cleaned dataset and the saved encoders.
+2. Reconstruct the complete feature space using:
+   - numerical features
+   - multi-label binary encodings for genres, cast and companies
+   - one-hot encodings for language
+   - TF-IDF vocabulary
+3. Load the trained model (`movie_xgb.json`).
+4. Extract feature importances using XGBoost’s settings.
+5. Map importance scores (f0, f1, …) back to human-readable feature names.
+6. Sort and save the results to:
+
+```
+data/feature_importance_words.csv
+```
+
+### Expected Output Format
+
+```
+feature,importance
+tfidf_love,12.5043
+genre_Action,10.3371
+cast_Tom_Hardy,8.2284
+company_Warner_Bros,7.9932
+tfidf_dark,7.1150
+...
+```
+
+This file contains all features in descending importance order, allowing detailed inspection of model behavior.
+
+### Observations
+
+The most influential features typically fall into three categories:
+
+- TF-IDF terms from the overview text  
+  Words signaling tone, themes or narrative quality often carry strong predictive power.
+
+- Genres and cast members  
+  Certain genres (e.g., drama, thriller) and prominent actors show notable correlations with audience ratings.
+
+- Production companies  
+  Well-established studios tend to be associated with more consistent production values.
+
+Even though numerical features such as budget and popularity contribute to the model, the text and multi-label categorical components dominate the importance ranking. This suggests that semantic content and film identity cues are among the strongest predictors of audience ratings.
+
+---
+
+## 3. Summary
+
+The evaluation shows that:
+
+- The model converges reliably with stable test performance.
+- Overfitting is present but controlled through boosting regularization.
+- The analysis of feature importance highlights meaningful patterns in the data.
+- The combination of textual, categorical and numerical inputs results in a rich and informative feature space.
+
+These results confirm the suitability of the chosen methodology for the task of rating prediction.
+
+
+---
+
+# V. Conclusion
+
+## Discussion
 *(Section content goes here)*
 
 ---
 
-# V. Installation & Setup Guide
+# VI. Installation & Setup Guide
 
 This guide explains how to install and run the project from scratch using the provided setup scripts.
 
@@ -357,11 +446,6 @@ Deactivate it with:
 deactivate
 ```
 
-<b>Setup Complete:</b> You are now ready to run data cleaning, train the model, and make predictions using the movie rating prediction pipeline.
+<b>Setup Complete:</b> You are now ready to run data cleaning, train the model and make predictions using the movie rating prediction pipeline.
 
 ---
-
-# VI. Conclusion
-
-## Discussion
-*(Section content goes here)*
