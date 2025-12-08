@@ -7,20 +7,15 @@ Yannick Matteo Reichle, Information Systems Department, Hanyang University, yann
 
 ## Table of Contents
 [I. Introduction]() 
-- [Motivation]()  
-- [Expected Outcome]()  
 
 [II. Datasets]()  
 
 [III. Methodology](#iii-methodology)  
-- [Choice of Algorithms](#choice-of-algorithms)  
-- [Features or Code Explanation](#features-or-code-explanation)  
 
 [IV. Evaluation & Analysis](#iv-evaluation--analysis)  
 - [Graphs, Tables, Statistics](#graphs-tables-statistics)  
 
 [V. Installation & Setup Guide]()  
-- [Tools, Libraries, Documentation Used](#tools-libraries-documentation-used)  
 
 [VI. Conclusion](#vi-conclusion)  
 - [Discussion](#discussion)
