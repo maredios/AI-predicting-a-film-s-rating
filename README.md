@@ -5,6 +5,23 @@ Antoine Maia-Sudre, Computer Science Department, Hanyang University, antoine.mai
 Joel Suhner, Finance Department, Hanyang University, joel.suhner@gmail.com  
 Yannick Matteo Reichle, Information Systems Department, Hanyang University, yannick.reichle@gmail.com  
 
+
+# Project Title
+
+## Table of Contents
+- [About](#about)
+- [Installation](#installation)
+- [License](#license)
+
+## About
+Describe what this project does and who it’s for.
+
+## Installation
+Provide installation instructions here.
+
+## License
+MIT / Apache-2.0 / etc.
+
 ## Table of Contents
 [I. Introduction]() 
 
@@ -21,9 +38,9 @@ Yannick Matteo Reichle, Information Systems Department, Hanyang University, yann
 
 ---
 
-# I. Introduction 
+# 1. Introduction 
 
-## Motivation
+## 1.1 Motivation
 The central motivation for choosing this project was to create a practical example of a complete machine learning workflow using a real-world dataset. Movie data is well-suited for this purpose because it contains a variety of feature types-numerical values, categorical labels, multi-label lists and free text-allowing us to demonstrate how different preprocessing techniques can be combined in one pipeline.
 
 We selected movie rating prediction specifically because it provides:
@@ -33,7 +50,7 @@ We selected movie rating prediction specifically because it provides:
 - a realistic application scenario commonly used in media-related machine learning,  
 - and a manageable problem size that makes it feasible to build the full workflow end-to-end.
 
-## Expected Outcome
+## 1.2 Expected Outcome
 By the end of the project, the goal is to deliver a complete system that can estimate a movie’s rating based on its metadata. This includes:
 
 - **A cleaned dataset** where incomplete or invalid records are removed and only relevant fields remain.  
@@ -171,7 +188,7 @@ The result is a practical and balanced approach that avoids unnecessary complexi
 
 ---
 
-# IV. Evaluation & Analysis
+# V. Evaluation & Analysis
 
 The evaluation of this project focuses on two main aspects: the learning behavior of the model during training and the contribution of individual features to the prediction outcome.
 
@@ -264,8 +281,7 @@ These results confirm the suitability of the chosen methodology for the task of 
 
 # V. Conclusion
 
-## Discussion
-*(Section content goes here)*
+
 
 ---
 
