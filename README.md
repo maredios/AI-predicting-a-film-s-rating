@@ -6,8 +6,7 @@ Joel Suhner, Finance Department, Hanyang University, joel.suhner@gmail.com
 Yannick Matteo Reichle, Information Systems Department, Hanyang University, yannick.reichle@gmail.com  
 
 ## Table of Contents
-
-[I. Introduction](#introduction)  
+[I. Introduction](#i-introduction) 
 - [Motivation](#motivation)  
 - [Expected Outcome](#expected-outcome)  
 
@@ -29,10 +28,10 @@ Yannick Matteo Reichle, Information Systems Department, Hanyang University, yann
 
 ---
 
-# I. Introduction {#introduction}
+# I. Introduction 
 
 ## Motivation
-The central motivation for choosing this project was to create a practical example of a complete machine learning workflow using a real-world dataset. Movie data is well-suited for this purpose because it contains a variety of feature types—numerical values, categorical labels, multi-label lists, and free text—allowing us to demonstrate how different preprocessing techniques can be combined in one pipeline.
+The central motivation for choosing this project was to create a practical example of a complete machine learning workflow using a real-world dataset. Movie data is well-suited for this purpose because it contains a variety of feature types-numerical values, categorical labels, multi-label lists, and free text-allowing us to demonstrate how different preprocessing techniques can be combined in one pipeline.
 
 We selected movie rating prediction specifically because it provides:
 
@@ -54,8 +53,36 @@ By the end of the project, the goal is to deliver a complete system that can est
 
 # II. Datasets
 
-## Describing your dataset
-*(Section content goes here)*
+The dataset used in this project is a cleaned movie metadata collection obtained from a public source on Hugging Face:  
+https://huggingface.co/datasets/wykonos/movies  
+
+It contains information about films such as genres, actors, production companies, language, financial details and audience ratings. The raw dataset was processed to remove incomplete or inconsistent entries, resulting in a structured CSV file suitable for machine learning tasks.
+
+## Dataset Size
+
+- **Rows (instances):** 9,270 movies  
+- **Columns (features):** 12 attributes  
+
+This size provides a solid foundation for identifying general relationships between movie characteristics and audience ratings.
+
+## Main Features
+
+Below are the key attributes that contribute to predicting a movie’s rating:
+
+- **title** – Name of the movie.  
+- **genres** – One or several genre categories combined into a compact format.  
+- **original_language** – Primary language in which the film was released.  
+- **production_companies** – List of studios involved in producing the movie.  
+- **credits** – Main actors associated with the film.  
+- **budget** – Reported production budget.  
+- **revenue** – Earnings made by the movie; provides context for performance.  
+- **runtime** – Duration of the film in minutes.  
+- **popularity** – Score representing public interest.  
+- **vote_average** – Target variable: audience rating on a 0–10 scale.  
+- **vote_count** – Number of votes; indicates rating reliability.  
+- **overview** – Short text summary describing the film.
+
+The dataset brings together textual, numerical and categorical features. This combination allows for a richer predictive model but also requires appropriate preprocessing to ensure compatibility with machine learning methods.
 
 ---
 
