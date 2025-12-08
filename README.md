@@ -7,22 +7,50 @@ Yannick Matteo Reichle, Information Systems Department, Hanyang University, yann
 
 
 ## Table of Contents
-[1. Introduction](#1-introduction)
-
-[II. Datasets]()  
-
-[III. Methodology]()  
-
-[IV. Evaluation & Analysis]()
-
-[V. Conclusion]()  
-
-[VI. Installation & Setup Guide]()  
+- [1 Introduction](#1-introduction)
+  - [1.1 Motivation](#11-motivation)
+  - [1.2 Expected Outcome](#12-expected-outcome)
+- [2 Datasets](#2-datasets)
+  - [2.1 Dataset Size](#21-dataset-size)
+  - [2.2 Main Features](#22-main-features)
+- [3 Methodology](#3-methodology)
+  - [3.1 Choice of Algorithms and Models](#31-choice-of-algorithms-and-models)
+    - [3.1.1 Why XGBoost?](#311-why-xgboost)
+    - [3.1.2 Alternative Models Considered](#312-alternative-models-considered)
+  - [3.2 Feature Engineering and Data Transformation](#32-feature-engineering-and-data-transformation)
+    - [3.2.1 Multi-Label Binarization](#321-multi-label-binarization)
+    - [3.2.2 One-Hot Encoding](#322-one-hot-encoding)
+    - [3.2.3 TF-IDF Vectorization](#323-tf-idf-vectorization)
+    - [3.2.4 Numerical Features](#324-numerical-features)
+    - [3.2.5 Final Feature Matrix](#325-final-feature-matrix)
+  - [3.3 Training Procedure](#33-training-procedure)
+  - [3.4 Why This Methodology Works Well](#34-why-this-methodology-works-well)
+- [4 Evaluation & Analysis](#4-evaluation--analysis)
+  - [4.1 Learning Curve](#41-learning-curve)
+    - [4.1.1 Interpretation](#411-interpretation)
+  - [4.2 Feature Importance Analysis](#42-feature-importance-analysis)
+    - [4.2.1 Method](#421-method)
+    - [4.2.2 Expected Output Format](#422-expected-output-format)
+    - [4.2.3 Observations](#423-observations)
+  - [4.3 Summary](#43-summary)
+- [5 Conclusion](#5-conclusion)
+- [6 Installation & Setup Guide](#6-installation--setup-guide)
+  - [6.1 Requirements](#61-requirements)
+  - [6.2 Download the Project](#62-download-the-project)
+  - [6.3 Download the Dataset (HuggingFace)](#63-download-the-dataset-huggingface)
+  - [6.4 Navigate into the Project Directory](#64-navigate-into-the-project-directory)
+  - [6.5 Set Up the Virtual Environment (create_envbat)](#65-set-up-the-virtual-environment-create_envbat)
+  - [6.6 Run the Full Pipeline](#66-run-the-full-pipeline)
+  - [6.7 Evaluate the Model](#67-evaluate-the-model)
+  - [6.8 Predict Ratings for New Movies](#68-predict-ratings-for-new-movies)
+    - [6.8.1 Interactive CLI Tool](#681-interactive-cli-tool)
+    - [6.8.2 Programmatic Usage](#682-programmatic-usage)
+  - [6.9 Reactivating the Virtual Environment](#69-reactivating-the-virtual-environment)
 
 
 ---
 
-# 1. Introduction 
+# 1 Introduction 
 
 ## 1.1 Motivation
 The central motivation for choosing this project was to create a practical example of a complete machine learning workflow using a real-world dataset. Movie data is well-suited for this purpose because it contains a variety of feature types-numerical values, categorical labels, multi-label lists and free text-allowing us to demonstrate how different preprocessing techniques can be combined in one pipeline.
@@ -45,7 +73,7 @@ By the end of the project, the goal is to deliver a complete system that can est
 
 ---
 
-# 2. Datasets
+# 2 Datasets
 
 The dataset used in this project is a cleaned movie metadata collection obtained from a public source on Hugging Face: https://huggingface.co/datasets/wykonos/movies  
 
@@ -79,7 +107,7 @@ The dataset brings together textual, numerical and categorical features. This co
 
 ---
 
-# 3. Methodology
+# 3 Methodology
 
 This section describes the methods, algorithms and design decisions used to build the movie-rating prediction system. The objective was to develop a complete workflow that processes movie metadata, converts it into numerical features and trains a model capable of generating rating estimates.
 
@@ -172,7 +200,7 @@ The result is a practical and balanced approach that avoids unnecessary complexi
 
 ---
 
-# 4. Evaluation & Analysis
+# 4 Evaluation & Analysis
 
 The evaluation of this project focuses on two main aspects: the learning behavior of the model during training and the contribution of individual features to the prediction outcome.
 
@@ -184,7 +212,7 @@ The plot below shows the training and validation RMSE:
 
 ![Learning Curve](plots/learning_curve.png)
 
-### Interpretation
+### 4.1.1 Interpretation
 
 - The training RMSE decreases continuously and reaches values below 0.50.
 - The test RMSE decreases rapidly in the early rounds and stabilizes around 0.79.
@@ -195,11 +223,11 @@ Overall, the learning curve shows that the model learns steadily and works well 
 
 ---
 
-## 2. Feature Importance Analysis
+## 4.2 Feature Importance Analysis
 
 To better understand which metadata attributes most strongly influence the predicted rating, a feature importance analysis was conducted based on the trained XGBoost model. The process reconstructs the exact feature names produced during preprocessing and aligns them with XGBoost’s internal importance scores.
 
-### Method
+### 4.2.1 Method
 
 The analysis follows these steps:
 
@@ -218,7 +246,7 @@ The analysis follows these steps:
 data/feature_importance_words.csv
 ```
 
-### Expected Output Format
+### 4.2.2 Expected Output Format
 
 ```
 feature,importance
@@ -232,7 +260,7 @@ tfidf_dark,7.1150
 
 This file contains all features in descending importance order, allowing detailed inspection of model behavior.
 
-### Observations
+### 4.2.3 Observations
 
 The most influential features typically fall into three categories:
 
@@ -249,7 +277,7 @@ Even though numerical features such as budget and popularity contribute to the m
 
 ---
 
-## 3. Summary
+## 4.3 Summary
 
 The evaluation shows that:
 
@@ -263,17 +291,17 @@ These results confirm the suitability of the chosen methodology for the task of 
 
 ---
 
-# V. Conclusion
+# 5 Conclusion
 
 
 
 ---
 
-# VI. Installation & Setup Guide
+# 6 Installation & Setup Guide
 
 This guide explains how to install and run the project from scratch using the provided setup scripts.
 
-## 1. Requirements
+## 6.1 Requirements
 
 Before starting, make sure the following software is installed:
 
@@ -289,7 +317,7 @@ Before starting, make sure the following software is installed:
 
 ---
 
-## 2. Download the Project
+## 6.2 Download the Project
 
 Clone the repository using Git:
 
@@ -300,7 +328,7 @@ git clone https://github.com/maredios/AI-predicting-a-film-s-rating.git
 
 ---
 
-## 3. Download the Dataset (HuggingFace)
+## 6.3 Download the Dataset (HuggingFace)
 
 Dataset source:  
 https://huggingface.co/datasets/wykonos/movies
@@ -317,7 +345,7 @@ https://huggingface.co/datasets/wykonos/movies
 
 ---
 
-## 4. Navigate into the Project Directory
+## 6.4 Navigate into the Project Directory
 
 If you are not already inside the project folder, switch into it:
 
@@ -344,7 +372,7 @@ feature_engineering.py
 
 ---
 
-## 5. Set Up the Virtual Environment (create_env.bat)
+## 6.5 Set Up the Virtual Environment (create_env.bat)
 
 PowerShell does not execute files from the current directory automatically.  
 Use `.\` to run the setup script:
@@ -363,7 +391,7 @@ After it completes, everything is installed and ready.
 
 ---
 
-## 6. Run the Full Pipeline
+## 6.6 Run the Full Pipeline
 
 Execute the entire cleaning + training workflow:
 
@@ -385,7 +413,7 @@ This script will:
 
 ---
 
-## 7. Evaluate the Model
+## 6.7 Evaluate the Model
 
 Test the model on an existing movie:
 
@@ -398,9 +426,9 @@ The script prints the true rating, predicted rating and the absolute error.
 
 ---
 
-## 8. Predict Ratings for New Movies
+## 6.8 Predict Ratings for New Movies
 
-### Interactive CLI Tool
+### 6.8.1 Interactive CLI Tool
 ```powershell
 python app_predict.py
 ```
@@ -408,7 +436,7 @@ python app_predict.py
 Enter the requested details (genres, overview, cast, etc.)  
 The predicted rating will be displayed afterwards.
 
-### Programmatic Usage
+### 6.8.2 Programmatic Usage
 ```python
 from predict_movie import predict_movie
 
@@ -432,7 +460,7 @@ print(prediction)
 
 ---
 
-## 9. Reactivating the Virtual Environment
+## 6.9 Reactivating the Virtual Environment
 
 When returning to the project, activate the environment again:
 
