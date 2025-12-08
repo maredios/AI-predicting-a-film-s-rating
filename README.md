@@ -6,12 +6,11 @@ Joel Suhner, Finance Department, Hanyang University, joel.suhner@gmail.com
 Yannick Matteo Reichle, Information Systems Department, Hanyang University, yannick.reichle@gmail.com  
 
 ## Table of Contents
-[I. Introduction](#i-introduction) 
-- [Motivation](#motivation)  
-- [Expected Outcome](#expected-outcome)  
+[I. Introduction]() 
+- [Motivation]()  
+- [Expected Outcome]()  
 
-[II. Datasets](#ii-datasets)  
-- [Describing your dataset](#describing-your-dataset)  
+[II. Datasets]()  
 
 [III. Methodology](#iii-methodology)  
 - [Choice of Algorithms](#choice-of-algorithms)  
@@ -20,7 +19,7 @@ Yannick Matteo Reichle, Information Systems Department, Hanyang University, yann
 [IV. Evaluation & Analysis](#iv-evaluation--analysis)  
 - [Graphs, Tables, Statistics](#graphs-tables-statistics)  
 
-[V. Related Work](#v-related-work)  
+[V. Installation & Setup Guide]()  
 - [Tools, Libraries, Documentation Used](#tools-libraries-documentation-used)  
 
 [VI. Conclusion](#vi-conclusion)  
@@ -88,11 +87,94 @@ The dataset brings together textual, numerical and categorical features. This co
 
 # III. Methodology
 
-## Choice of Algorithms
-*(Section content goes here)*
+This section describes the methods, algorithms and design decisions used to build the movie-rating prediction system. The objective was to develop a complete workflow that processes movie metadata, converts it into numerical features and trains a model capable of generating rating estimates.
 
-## Features or Code Explanation
-*(Section content goes here)*
+## 1. Choice of Algorithms and Models
+
+The model used in this project is XGBoost Regression, a gradient-boosted tree method.
+
+### Why XGBoost?
+
+The dataset contains a mixture of data types: numerical features (budget, runtime), categorical fields (language), multi-label attributes (genres, cast, companies) and high-dimensional sparse text features (TF-IDF vectors from the movie overview). XGBoost is well suited for this structure for several reasons:
+
+- It handles large feature matrices efficiently, which is important for TF-IDF text vectors.
+- It provides built-in regularization that helps control overfitting.
+- It consistently performs well on medium-sized structured datasets, often outperforming neural networks and classical regression models.
+
+### Alternative Models Considered
+
+Other models were considered but were not chosen for the following reasons:
+
+- Linear regression cannot capture complex interactions and tends to underperform with high-dimensional sparse text features.
+- Random forests require significantly more memory when working with large sparse matrices and typically achieve lower performance compared to boosted trees.
+- Neural networks need more data, careful tuning and additional preprocessing steps such as embeddings for text and categorical features, adding complexity without clear performance gains.
+
+XGBoost therefore provides the best balance of performance, efficiency and practicality for this task.
+
+---
+
+## 2. Feature Engineering and Data Transformation
+
+The dataset includes several distinct feature types, each requiring a dedicated encoding method.
+
+### 2.1 Multi-Label Binarization
+
+Features such as genres, cast and production companies contain multiple values combined in a single field. These strings are split into lists and encoded using MultiLabelBinarizer, resulting in a binary vector where each column represents the presence or absence of a specific label.
+
+### 2.2 One-Hot Encoding
+
+The original_language field contains one categorical value per film. OneHotEncoder transforms this into binary indicator columns. This prevents the model from treating languages as numerical values.
+
+### 2.3 TF-IDF Vectorization
+
+The overview text provides semantic information about the plot. TF-IDF is used to extract relevant terms and convert them into a numerical representation. Up to 5000 features are generated, capturing the most informative words across all summaries.
+
+TF-IDF was chosen because it is computationally efficient, works well for short descriptions and produces sparse vectors that integrate smoothly into XGBoost.
+
+### 2.4 Numerical Features
+
+Budget, revenue, runtime, popularity and vote_count are included directly after cleaning.
+
+### 2.5 Final Feature Matrix
+
+All encoded components are concatenated into a single feature vector:
+
+```
+[numerical features]
++ [genre indicators]
++ [company indicators]
++ [cast indicators]
++ [language indicators]
++ [TF-IDF vector]
+```
+
+This combined representation covers all relevant aspects of the movie metadata.
+
+---
+
+## 3. Training Procedure
+
+The model training process is structured as follows:
+
+1. A train-test split (80/20) ensures fair evaluation on unseen data.
+2. The data is converted into the XGBoost DMatrix format for optimized training performance.
+3. A controlled boosting loop of 300 rounds is executed, allowing tracking of training and validation error after each iteration.
+4. The final model is saved to `models/movie_xgb.json` and all preprocessing encoders are stored in `models/encoders.pkl`.
+5. A learning curve is generated, showing how the model’s error evolves during training.
+
+This procedure ensures reproducibility and transparency in evaluating the model.
+
+---
+
+## 4. Why This Methodology Works Well
+
+Movie metadata is heterogeneous: it includes text, categories, lists of labels and numerical values. The chosen methodology is effective because:
+
+- XGBoost can integrate all these feature types into a single model.
+- TF-IDF captures meaningful information from movie descriptions without requiring advanced NLP models.
+- Multi-label and one-hot encoding provide structured representations of categorical information.
+
+The result is a practical and balanced approach that avoids unnecessary complexity while still achieving strong predictive performance.
 
 ---
 
