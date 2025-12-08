@@ -103,10 +103,184 @@ The dataset brings together textual, numerical and categorical features. This co
 
 ---
 
-# V. Related Work
+# V. Installation & Setup Guide
 
-## Tools, Libraries, Documentation Used
-*(Section content goes here)*
+This guide explains how to install and run the project from scratch using the provided setup scripts.
+
+## 1. Requirements
+
+Before starting, make sure the following software is installed:
+
+- **Python 3.10+**
+  ```powershell
+  python --version
+  ```
+- **pip**
+  ```powershell
+  python -m pip --version
+  ```
+- **Git**, to clone the repository
+
+---
+
+## 2. Download the Project
+
+Clone the repository using Git:
+
+```powershell
+git clone https://github.com/maredios/AI-predicting-a-film-s-rating.git
+
+```
+
+---
+
+## 3. Download the Dataset (HuggingFace)
+
+Dataset source:  
+https://huggingface.co/datasets/wykonos/movies
+
+1. Download the movies CSV file.  
+2. Create a folder named `data` inside the project directory:
+   ```powershell
+   mkdir data
+   ```
+3. Save or rename the downloaded file as:
+   ```
+   data/movies_dataset.csv
+   ```
+
+---
+
+## 4. Navigate into the Project Directory
+
+If you are not already inside the project folder, switch into it:
+
+```powershell
+cd "C:\path\to\AI-predicting-a-film-s-rating"
+```
+
+Verify that you are in the correct directory:
+
+```powershell
+dir
+```
+
+You should see files like:
+
+```
+create_env.bat
+requirements.txt
+train_model.py
+data_cleaning.py
+feature_engineering.py
+...
+```
+
+---
+
+## 5. Set Up the Virtual Environment (create_env.bat)
+
+PowerShell does not execute files from the current directory automatically.  
+Use `.\` to run the setup script:
+
+```powershell
+.\create_env.bat
+```
+
+This script will:
+
+1. Create a virtual environment named `env`
+2. Activate it
+3. Install all required packages from `requirements.txt`
+
+After it completes, everything is installed and ready.
+
+---
+
+## 6. Run the Full Pipeline
+
+Execute the entire cleaning + training workflow:
+
+```powershell
+python run_project.py
+```
+
+This script will:
+
+- Clean the dataset  
+- Build encoders  
+- Generate feature matrices  
+- Train the XGBoost model  
+- Save:
+  - `models/encoders.pkl`
+  - `models/movie_xgb.json`
+  - `logs/training_log.txt`
+  - `plots/learning_curve.png`
+
+---
+
+## 7. Evaluate the Model
+
+Test the model on an existing movie:
+
+```powershell
+python evaluate_model.py
+```
+
+Enter the movie title when prompted.  
+The script prints the true rating, predicted rating and the absolute error.
+
+---
+
+## 8. Predict Ratings for New Movies
+
+### Interactive CLI Tool
+```powershell
+python app_predict.py
+```
+
+Enter the requested details (genres, overview, cast, etc.)  
+The predicted rating will be displayed afterwards.
+
+### Programmatic Usage
+```python
+from predict_movie import predict_movie
+
+movie = {
+    "title": "Example Movie",
+    "genres": "Action-Thriller",
+    "original_language": "en",
+    "overview": "A story about...",
+    "popularity": 120.0,
+    "production_companies": "Studio A-Studio B",
+    "budget": 150000000,
+    "revenue": 600000000,
+    "runtime": 130,
+    "vote_count": 5000,
+    "credits": "Actor1-Actor2"
+}
+
+prediction = predict_movie(movie)
+print(prediction)
+```
+
+---
+
+## 9. Reactivating the Virtual Environment
+
+When returning to the project, activate the environment again:
+
+```powershell
+.\env\Scripts\activate
+```
+
+Deactivate it with:
+
+```powershell
+deactivate
+```
+
+<b>Setup Complete:</b> You are now ready to run data cleaning, train the model, and make predictions using the movie rating prediction pipeline.
 
 ---
 
