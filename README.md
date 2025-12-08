@@ -6,22 +6,6 @@ Joel Suhner, Finance Department, Hanyang University, joel.suhner@gmail.com
 Yannick Matteo Reichle, Information Systems Department, Hanyang University, yannick.reichle@gmail.com  
 
 
-# Project Title
-
-## Table of Contents
-- [About](#about)
-- [Installation](#installation)
-- [License](#license)
-
-## About
-Describe what this project does and who it’s for.
-
-## Installation
-Provide installation instructions here.
-
-## License
-MIT / Apache-2.0 / etc.
-
 ## Table of Contents
 [1. Introduction](#1-introduction)
 
@@ -61,20 +45,20 @@ By the end of the project, the goal is to deliver a complete system that can est
 
 ---
 
-# II. Datasets
+# 2. Datasets
 
 The dataset used in this project is a cleaned movie metadata collection obtained from a public source on Hugging Face: https://huggingface.co/datasets/wykonos/movies  
 
 It contains information about films such as genres, actors, production companies, language, financial details and audience ratings. The raw dataset was processed to remove incomplete or inconsistent entries, resulting in a structured CSV file suitable for machine learning tasks.
 
-## Dataset Size
+## 2.1 Dataset Size
 
 - **Rows (instances):** 9,270 movies  
 - **Columns (features):** 12 attributes  
 
 This size provides a solid foundation for identifying general relationships between movie characteristics and audience ratings.
 
-## Main Features
+## 2.2 Main Features
 
 Below are the key attributes that contribute to predicting a movie’s rating:
 
@@ -95,15 +79,15 @@ The dataset brings together textual, numerical and categorical features. This co
 
 ---
 
-# III. Methodology
+# 3. Methodology
 
 This section describes the methods, algorithms and design decisions used to build the movie-rating prediction system. The objective was to develop a complete workflow that processes movie metadata, converts it into numerical features and trains a model capable of generating rating estimates.
 
-## 1. Choice of Algorithms and Models
+## 3.1 Choice of Algorithms and Models
 
 The model used in this project is XGBoost Regression, a gradient-boosted tree method.
 
-### Why XGBoost?
+### 3.1.1 Why XGBoost?
 
 The dataset contains a mixture of data types: numerical features (budget, runtime), categorical fields (language), multi-label attributes (genres, cast, companies) and high-dimensional sparse text features (TF-IDF vectors from the movie overview). XGBoost is well suited for this structure for several reasons:
 
@@ -111,7 +95,7 @@ The dataset contains a mixture of data types: numerical features (budget, runtim
 - It provides built-in regularization that helps control overfitting.
 - It consistently performs well on medium-sized structured datasets, often outperforming neural networks and classical regression models.
 
-### Alternative Models Considered
+### 3.1.2 Alternative Models Considered
 
 Other models were considered but were not chosen for the following reasons:
 
@@ -123,29 +107,29 @@ XGBoost therefore provides the best balance of performance, efficiency and pract
 
 ---
 
-## 2. Feature Engineering and Data Transformation
+## 3.2 Feature Engineering and Data Transformation
 
 The dataset includes several distinct feature types, each requiring a dedicated encoding method.
 
-### 2.1 Multi-Label Binarization
+### 3.2.1 Multi-Label Binarization
 
 Features such as genres, cast and production companies contain multiple values combined in a single field. These strings are split into lists and encoded using MultiLabelBinarizer, resulting in a binary vector where each column represents the presence or absence of a specific label.
 
-### 2.2 One-Hot Encoding
+### 3.2.2 One-Hot Encoding
 
 The original_language field contains one categorical value per film. OneHotEncoder transforms this into binary indicator columns. This prevents the model from treating languages as numerical values.
 
-### 2.3 TF-IDF Vectorization
+### 3.2.3 TF-IDF Vectorization
 
 The overview text provides semantic information about the plot. TF-IDF is used to extract relevant terms and convert them into a numerical representation. Up to 5000 features are generated, capturing the most informative words across all summaries.
 
 TF-IDF was chosen because it is computationally efficient, works well for short descriptions and produces sparse vectors that integrate smoothly into XGBoost.
 
-### 2.4 Numerical Features
+### 3.2.4 Numerical Features
 
 Budget, revenue, runtime, popularity and vote_count are included directly after cleaning.
 
-### 2.5 Final Feature Matrix
+### 3.2.5 Final Feature Matrix
 
 All encoded components are concatenated into a single feature vector:
 
@@ -162,7 +146,7 @@ This combined representation covers all relevant aspects of the movie metadata.
 
 ---
 
-## 3. Training Procedure
+## 3.3 Training Procedure
 
 The model training process is structured as follows:
 
@@ -176,7 +160,7 @@ This procedure ensures reproducibility and transparency in evaluating the model.
 
 ---
 
-## 4. Why This Methodology Works Well
+## 3.4 Why This Methodology Works Well
 
 Movie metadata is heterogeneous: it includes text, categories, lists of labels and numerical values. The chosen methodology is effective because:
 
@@ -188,11 +172,11 @@ The result is a practical and balanced approach that avoids unnecessary complexi
 
 ---
 
-# V. Evaluation & Analysis
+# 4. Evaluation & Analysis
 
 The evaluation of this project focuses on two main aspects: the learning behavior of the model during training and the contribution of individual features to the prediction outcome.
 
-## 1. Learning Curve
+## 4.1. Learning Curve
 
 The learning curve visualizes how the Root Mean Squared Error (RMSE) evolves across 300 boosting rounds. Both the training and test RMSE are recorded after each iteration. This allows an assessment of model convergence and helps identify potential overfitting.
 
