@@ -33,7 +33,7 @@ Yannick Matteo Reichle, Information Systems Department, Hanyang University, yann
     - [4.2.2 Expected Output Format](#422-expected-output-format)
     - [4.2.3 Observations](#423-observations)
   - [4.3 Summary](#43-summary)
-- [5 Conclusion](#5-conclusion)
+- [5 Conclusion](#5-conclusion)  
 - [6 Installation & Setup Guide](#6-installation--setup-guide)
   - [6.1 Requirements](#61-requirements)
   - [6.2 Download the Project](#62-download-the-project)
@@ -293,6 +293,31 @@ These results confirm the suitability of the chosen methodology for the task of 
 
 # 5 Conclusion
 
+The conclusion of this project summarizes the model’s predictive performance, the factors influencing its error rate and the broader insights gained about what drives movie ratings.
+
+## 5.1 Comparing the Model’s RMSE to Real-World Expectations
+
+The final model achieved a test RMSE of approximately 0.79 on a 0–10 rating scale. When compared to real-world systems, this falls within the range commonly observed for metadata-based rating predictors. Industry-style recommender models that rely only on item features (such as genres, cast and plot summaries) typically reach RMSE values between 0.70 and 1.0, depending on dataset quality and preprocessing depth. In this context, our score indicates that the model performs reliably and captures meaningful relationships in the data. While large commercial platforms achieve lower error rates, these usually require millions of user interactions, personalized history and advanced embedding models—none of which were available for this project. Therefore, achieving an RMSE around 0.79 represents a strong and realistic result given the constraints of a metadata-only approach.
+
+---
+
+## 5.2 How the RMSE Could Be Improved (and Why We Did Not Do So)
+
+Although the model performs well, several strategies could reduce the error further. First, more advanced text representation techniques—such as transformer-based embeddings (e.g., BERT)—could better capture semantic nuances in movie overviews. Second, applying hyperparameter optimization (grid search, Bayesian optimization or Optuna) could fine-tune the XGBoost parameters beyond the fixed training configuration used in this project. Third, incorporating additional metadata such as release year, director information, or user-review sentiment would increase the richness of the feature space. Finally, using deep learning architectures or hybrid collaborative filtering models would likely reduce the RMSE significantly.
+
+These improvements were not implemented due to practical limitations. Transformer models require substantial computational resources and longer training times, which exceeded the project’s scope. Automated hyperparameter optimization is similarly time-intensive and was avoided to keep the workflow simple and reproducible. Most importantly, the available dataset contained no user–item interaction data, preventing us from using the types of models that achieve state-of-the-art results. The goal of the project was to build a complete and transparent ML pipeline rather than to push for maximum theoretical accuracy, which guided these choices.
+
+---
+
+## 5.3 What Our Results Tell Us About What Makes a “Good” Movie
+
+The feature-importance analysis highlights several interesting insights about what drives audience ratings. The most influential predictors were TF-IDF terms from the overview text, suggesting that the narrative themes and tone of the movie play a major role in shaping public perception. This indicates that audiences respond strongly to the story communicated in the film’s description—elements such as emotional depth, conflict, or genre-specific signals.
+
+Genres, cast members and production companies also appeared prominently among the top-ranked features. This reflects the importance of film identity: well-established studios, recognizable actors and specific genre categories often correlate with higher ratings. These attributes signal production quality, audience expectations and brand reliability.
+
+Although numerical features like budget and popularity contributed to the model, they were less dominant. This suggests that spending more money on a movie alone does not guarantee audience appreciation. Instead, thematic content, stylistic cues and the creative team behind a film play a more defining role in predicting how well it will be received.
+
+Overall, the results emphasize that a “good” movie is shaped less by financial scale and more by storytelling, cast appeal and genre alignment—a useful insight for understanding audience behavior and for guiding similar projects in media analytics.
 
 
 ---
