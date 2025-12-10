@@ -341,7 +341,7 @@ Why We Did Not Implement These?
 
 ---
 
-## 5.3 What Makes a good Movie
+## 5.3 What Makes a Good Movie
 
 - TF-IDF terms from the overview text were the strongest predictors, showing narrative themes heavily influence ratings.
 
