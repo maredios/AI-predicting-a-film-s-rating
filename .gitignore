@@ -1,3 +1,4 @@
-data/*.csv
+data/movies_dataset.csv
+data/movies_dataset_clean.csv
 env/
 *.dll
