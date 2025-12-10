@@ -50,7 +50,7 @@ Yannick Matteo Reichle, Information Systems Department, Hanyang University, yann
     - [6.8.2 Programmatic Usage](#682-programmatic-usage)
   - [6.9 Reactivating the Virtual Environment](#69-reactivating-the-virtual-environment)
 - [7 Related Work](#7-related-work)
-  - [7.1 Python Libraries and Tools](##71-python-libraries-and-tools)
+  - [7.1 Python Libraries and Tools](#71-python-libraries-and-tools)
 
 
 ---
