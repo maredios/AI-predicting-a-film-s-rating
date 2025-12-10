@@ -324,6 +324,8 @@ Potential Improvements
 
 - Add more metadata features such as release year, director, or sentiment from user reviews.
 
+- Use deep learning models to reduce error further
+
 Why We Did Not Implement These
 
 - Transformer models require heavy computation and long training times beyond project scope.
