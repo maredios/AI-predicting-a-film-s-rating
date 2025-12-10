@@ -49,6 +49,8 @@ Yannick Matteo Reichle, Information Systems Department, Hanyang University, yann
     - [6.8.1 Interactive CLI Tool](#681-interactive-cli-tool)
     - [6.8.2 Programmatic Usage](#682-programmatic-usage)
   - [6.9 Reactivating the Virtual Environment](#69-reactivating-the-virtual-environment)
+- [7 Related Work](#7-related-work)
+   -[7.1 Python Libraries and Tools](##71-python-libraries-and-tools)
 
 
 ---
@@ -505,3 +507,35 @@ deactivate
 <b>Setup Complete:</b> You are now ready to run data cleaning, train the model and make predictions using the movie rating prediction pipeline.
 
 ---
+
+# 7 Related Work
+
+Tools, libraries, blogs, or any documentation that we have used to do this project
+
+## 7.1 Python Libraries and Tools
+
+Data Processing
+
+- Pandas — used for loading, cleaning, manipulating, and merging movie datasets.
+
+- NumPy — used for numerical operations and array handling.
+
+Feature Engineering
+
+- MultiLabelBinarizer (scikit-learn) — used to encode multi-category fields (genres, cast, production companies).
+
+- OneHotEncoder (scikit-learn) — used to encode categorical variables (e.g., original language).
+
+- TfidfVectorizer (scikit-learn) — used to convert movie overviews into TF-IDF text features.
+
+Modeling
+
+- XGBoost — used to train the regression model (predicting vote_average) and extract feature importances.
+
+- XGBoost Booster interface — used to load the trained model (movie_xgb.json) and retrieve importance scores.
+
+Persistence / Utilities
+
+- Pickle — used to save and load preprocessing encoders (encoders.pkl) for consistent training and inference.
+
+- OS module — used for directory creation and file path handling.
