@@ -343,15 +343,15 @@ Why We Did Not Implement These
 
 - TF-IDF terms from the overview text were the strongest predictors, showing narrative themes heavily influence ratings.
 
-- This suggests audience ratings respond strongly to the story’s tone, emotional cues, and thematic content.
+- This suggests audience ratings respond strongly to the story’s tone, emotional cues and thematic content.
 
-- Genres, cast members, and production companies also ranked high in importance, reflecting film identity and branding effects.
+- Genres, cast members and production companies also ranked high in importance, reflecting film identity and branding effects.
 
 - These factors indicate the importance of recognizable actors, reputable studios and clear genre signals.
 
 - Numeric features (budget, popularity) contributed less, showing that higher spending does not guarantee better ratings.
 
-- Overall, audience perception is shaped more by storytelling quality, cast appeal, and genre alignment than by financial scale.
+- Overall, audience perception is shaped more by storytelling quality, cast appeal and genre alignment than by financial scale.
 
 ---
 
@@ -544,26 +544,26 @@ Tools, libraries, blogs, or any documentation that we have used to do this proje
 
 Data Processing
 
-- Pandas — used for loading, cleaning, manipulating, and merging movie datasets.
+- Pandas - used for loading, cleaning, manipulating and merging movie datasets.
 
-- NumPy — used for numerical operations and array handling.
+- NumPy - used for numerical operations and array handling.
 
 Feature Engineering
 
-- MultiLabelBinarizer (scikit-learn) — used to encode multi-category fields (genres, cast, production companies).
+- MultiLabelBinarizer (scikit-learn) - used to encode multi-category fields (genres, cast, production companies).
 
-- OneHotEncoder (scikit-learn) — used to encode categorical variables (e.g., original language).
+- OneHotEncoder (scikit-learn) - used to encode categorical variables (e.g., original language).
 
-- TfidfVectorizer (scikit-learn) — used to convert movie overviews into TF-IDF text features.
+- TfidfVectorizer (scikit-learn) - used to convert movie overviews into TF-IDF text features.
 
 Modeling
 
-- XGBoost — used to train the regression model (predicting vote_average) and extract feature importances.
+- XGBoost - used to train the regression model (predicting vote_average) and extract feature importances.
 
-- XGBoost Booster interface — used to load the trained model (movie_xgb.json) and retrieve importance scores.
+- XGBoost Booster interface - used to load the trained model (movie_xgb.json) and retrieve importance scores.
 
 Persistence / Utilities
 
-- Pickle — used to save and load preprocessing encoders (encoders.pkl) for consistent training and inference.
+- Pickle - used to save and load preprocessing encoders (encoders.pkl) for consistent training and inference.
 
-- OS module — used for directory creation and file path handling.
+- OS module - used for directory creation and file path handling.
