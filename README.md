@@ -230,28 +230,30 @@ Overall, the learning curve shows that the model learns steadily and works well 
 
 ## 4.2 Feature Importance Analysis
 
-To better understand which metadata attributes most strongly influence the predicted rating, a feature importance analysis was conducted based on the trained XGBoost model. The process reconstructs the exact feature names produced during preprocessing and aligns them with XGBoost’s internal importance scores.
+To determine which metadata attributes most strongly influence the predicted movie ratings, a feature importance analysis was performed using the trained XGBoost model. This analysis reconstructs the full preprocessing feature space and aligns it with XGBoost’s internal feature indices to obtain interpretable importance scores.
 
 ### 4.2.1 Method
 
-The analysis follows these steps:
+The analysis proceeds as follows:
 
-1. Load the cleaned dataset and the saved encoders.
-2. Reconstruct the complete feature space using:
-   - numerical features
-   - multi-label binary encodings for genres, cast and companies
-   - one-hot encodings for language
-   - TF-IDF vocabulary
-3. Load the trained model (`movie_xgb.json`).
-4. Extract feature importances using XGBoost’s settings.
-5. Map importance scores (f0, f1, …) back to human-readable feature names.
-6. Sort and save the results to:
+1. Load the cleaned dataset together with all saved encoders.  
+2. Reconstruct the complete feature matrix, including:
+   - numerical features  
+   - multi-label binary encodings (genres, cast, production companies)  
+   - one-hot encodings (original language)  
+   - TF-IDF vocabulary from the movie overview text  
+3. Load the trained XGBoost model (`movie_xgb.json`).  
+4. Extract importance scores based on XGBoost’s built-in ranking.  
+5. Map internal feature IDs (e.g., `f0`, `f1`, ...) back to human-readable names.  
+6. Sort the results and save them to:
 
 ```
-data/feature_importance_words.csv
+/data/feature_importance_words.csv
 ```
 
 ### 4.2.2 Expected Output Format
+
+The output file contains two columns—feature name and importance—sorted in descending order:
 
 ```
 feature,importance
@@ -263,36 +265,36 @@ tfidf_dark,7.1150
 ...
 ```
 
-This file contains all features in descending importance order, allowing detailed inspection of model behavior.
+This representation enables detailed inspection of which textual, categorical, or numerical inputs contribute most strongly to the model’s predictions.
 
 ### 4.2.3 Observations
 
-The most influential features typically fall into three categories:
+The most influential features fall into three main groups:
 
-- TF-IDF terms from the overview text  
-  Words signaling tone, themes or narrative quality often carry strong predictive power.
+**1. TF-IDF terms (overview text)**  
+Words reflecting themes, tone, or narrative elements often show strong predictive power.  
+These textual signals dominate the ranking.
 
-- Genres and cast members  
-  Certain genres (e.g., drama, thriller) and prominent actors show notable correlations with audience ratings.
+**2. Genres and cast encodings**  
+Certain genres and specific high-profile actors are consistently correlated with higher or lower ratings.
 
-- Production companies  
-  Well-established studios tend to be associated with more consistent production values.
+**3. Production companies**  
+Major studios frequently appear among the more influential categorical features, suggesting a link between studio reputation and audience expectations.
 
-Even though numerical features such as budget and popularity contribute to the model, the text and multi-label categorical components dominate the importance ranking. This suggests that semantic content and film identity cues are among the strongest predictors of audience ratings.
+Although numerical features (e.g., budget, popularity) contribute meaningfully, textual and multi-label categorical components have a substantially greater impact. This indicates that semantic movie descriptions and identity-defining metadata are highly informative for rating prediction.
 
 ---
 
 ## 4.3 Summary
 
-The evaluation shows that:
+The evaluation demonstrates that:
 
-- The model converges reliably with stable test performance.
-- Overfitting is present but controlled through boosting regularization.
-- The analysis of feature importance highlights meaningful patterns in the data.
-- The combination of textual, categorical and numerical inputs results in a rich and informative feature space.
+- The model converges reliably with stable test performance.  
+- Overfitting is present but remains controlled through XGBoost’s regularization parameters.  
+- The feature importance analysis reveals clear and interpretable patterns aligned with the structure of movie metadata.  
+- Combining textual, categorical, and numerical inputs forms a rich feature space that captures multiple dimensions of film characteristics.
 
-These results confirm the suitability of the chosen methodology for the task of rating prediction.
-
+Overall, these results confirm the suitability of the chosen preprocessing strategy and model architecture for the task of rating prediction.
 
 ---
 
@@ -316,7 +318,7 @@ The conclusion of this project summarizes the model’s predictive performance, 
 
 ## 5.2 How the RMSE Could Be Improved (and Why We Did Not Do So)
 
-Potential Improvements
+Potential Improvements:
 
 - Use transformer-based text embeddings (e.g., BERT) for richer semantic representation.
 
@@ -326,7 +328,7 @@ Potential Improvements
 
 - Use deep learning models to reduce error further
 
-Why We Did Not Implement These
+Why We Did Not Implement These?
 
 - Transformer models require heavy computation and long training times beyond project scope.
 
