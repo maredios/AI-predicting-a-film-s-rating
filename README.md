@@ -36,7 +36,7 @@ Yannick Matteo Reichle, Information Systems Department, Hanyang University, yann
 - [5 Conclusion](#5-conclusion)
   - [5.1 RSME Evaluation](#51-comparing-the-models-rmse-to-real-world-expectations)
   - [5.2 RSME Improvements](#52-how-the-rmse-could-be-improved)
-  - [5.3 What Makes A Good Movie](#53-what-the-results-tell-us-about-good-movies)
+  - [5.3 What Makes A Good Movie](#53-what-makes-a-good-movie)
 - [6 Installation & Setup Guide](#6-installation--setup-guide)
   - [6.1 Requirements](#61-requirements)
   - [6.2 Download the Project](#62-download-the-project)
@@ -316,7 +316,7 @@ The conclusion of this project summarizes the model’s predictive performance, 
 
 ---
 
-## 5.2 How the RMSE Could Be Improved (and Why We Did Not Do So)
+## 5.2 How the RMSE Could Be Improved
 
 Potential Improvements:
 
@@ -341,7 +341,7 @@ Why We Did Not Implement These?
 
 ---
 
-## 5.3 What Our Results Tell Us About What Makes a “Good” Movie
+## 5.3 What Makes a good Movie
 
 - TF-IDF terms from the overview text were the strongest predictors, showing narrative themes heavily influence ratings.
 
