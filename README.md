@@ -49,9 +49,8 @@ https://youtu.be/yo_9SUUS5pM
     - [4.5.1 Reconstruct feature names](#451-reconstruct-feature-names)
     - [4.5.2 Extract importance values](#452-extract-importance-values)
   - [4.6 Evaluation & Prediction Scripts](#46-evaluation--prediction-scripts)
-    - [4.6.1 `evaluate_model.py`](#461-evaluate_modelpy)
+    - [4.6.1 `evaluate_movie.py`](#461-evaluate_moviepy)
     - [4.6.2 `predict_movie.py`](#462-predict_moviepy)
-    - [4.6.3 `app_predict.py`](#463-app_predictpy)
   - [4.7 Automation – `run_project.py`](#47-automation--run_projectpy) 
 - [5 Evaluation & Analysis](#5-evaluation--analysis)
   - [5.1 Learning Curve](#51-learning-curve)
@@ -549,7 +548,7 @@ Metric used: **gain**
 
 ## 4.6 Evaluation & Prediction Scripts
 
-### 4.6.1 `evaluate_model.py`
+### 4.6.1 `evaluate_movie.py`
 
 - Loads clean dataset  
 - Finds a film by title  
@@ -585,33 +584,6 @@ Then:
 Contains an example.
 
 <img width="2532" height="578" alt="image" src="https://github.com/user-attachments/assets/ed416e94-1eaa-455a-b5a7-e0e14354ebcb" />
-
----
-
-### 4.6.3 `app_predict.py`
-
-A terminal-based interactive tool.
-
-Asks the user for:
-
-- title  
-- genres  
-- language  
-- overview  
-- popularity  
-- budget  
-- revenue  
-- runtime  
-- vote count  
-- actors  
-
-Then prints:
-
-```text
-Predicted rating: ⭐ 7.52 / 10
-```
-
-This is essentially your CLI application.
 
 ---
 
