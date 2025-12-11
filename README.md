@@ -28,33 +28,58 @@ https://youtu.be/yo_9SUUS5pM
     - [3.2.5 Final Feature Matrix](#325-final-feature-matrix)
   - [3.3 Training Procedure](#33-training-procedure)
   - [3.4 Why This Methodology Works Well](#34-why-this-methodology-works-well)
-- [4 Evaluation & Analysis](#4-evaluation--analysis)
-  - [4.1 Learning Curve](#41-learning-curve)
-    - [4.1.1 Interpretation](#411-interpretation)
-  - [4.2 Feature Importance Analysis](#42-feature-importance-analysis)
-    - [4.2.1 Method](#421-method)
-    - [4.2.2 Expected Output Format](#422-expected-output-format)
-    - [4.2.3 Observations](#423-observations)
-  - [4.3 Summary](#43-summary)
-- [5 Conclusion](#5-conclusion)
-  - [5.1 RSME Evaluation](#51-comparing-the-models-rmse-to-real-world-expectations)
-  - [5.2 RSME Improvements](#52-how-the-rmse-could-be-improved)
-  - [5.3 What Makes A Good Movie](#53-what-makes-a-good-movie)
-- [6 Installation & Setup Guide](#6-installation--setup-guide)
-  - [6.1 Requirements](#61-requirements)
-  - [6.2 Download the Project](#62-download-the-project)
-  - [6.3 Download the Dataset (HuggingFace)](#63-download-the-dataset-huggingface)
-  - [6.4 Navigate into the Project Directory](#64-navigate-into-the-project-directory)
-  - [6.5 Set Up the Virtual Environment (create_envbat)](#65-set-up-the-virtual-environment-create_envbat)
-  - [6.6 Run the Full Pipeline](#66-run-the-full-pipeline)
-  - [6.7 Evaluate the Model](#67-evaluate-the-model)
-  - [6.8 Predict Ratings for New Movies](#68-predict-ratings-for-new-movies)
-    - [6.8.1 Interactive CLI Tool](#681-interactive-cli-tool)
-    - [6.8.2 Programmatic Usage](#682-programmatic-usage)
-  - [6.9 Reactivating the Virtual Environment](#69-reactivating-the-virtual-environment)
-- [7 Related Work](#7-related-work)
-  - [7.1 Python Libraries and Tools](#71-python-libraries-and-tools)
-  - [7.2 Related Projects](#72-related-projects)
+- [4 Code Explanation](#4-code-explanation)
+  - [4.1 Configuration & Utilities](#41-configuration--utilities)
+    - [4.1.1 `config.py` – Central Constants](#411-configpy--central-constants)
+    - [4.1.2 `utils.py` – Helper Functions](#412-utilspy--helper-functions)
+  - [4.2 Data Cleaning (`data_cleaning.py`)](#42-data-cleaning-data_cleaningpy)
+    - [4.2.1 Cleaning Steps](#421-cleaning-steps)
+  - [4.3 Feature Engineering (`feature_engineering.py`)](#43-feature-engineering-feature_engineeringpy)
+    - [4.3.1 `_split_field` Helper](#431-_split_field-helper)
+    - [4.3.2 Building Encoders](#432-building-encoders)
+    - [4.3.3 Transforming DataFrame into X and y](#433-transforming-dataframe-into-x-and-y)
+    - [4.3.4 Preprocessing and Saving Encoders](#434-preprocessing-and-saving-encoders)
+    - [4.3.5 Preprocessing a Single Movie Input](#435-preprocessing-a-single-movie-input)
+  - [4.4 Training with XGBoost (`train_model.py`)](#44-training-with-xgboost-train_modelpy)
+    - [4.4.1 Setup](#441-setup)
+    - [4.4.2 Loading, Preprocessing & Splitting](#442-loading-preprocessing--splitting)
+    - [4.4.3 Model Parameters](#443-model-parameters)
+    - [4.4.4 Custom Training Loop](#444-custom-training-loop)
+  - [4.5 Feature Importance (`feature_importance.py`)](#45-feature-importance-feature_importancepy)
+    - [4.5.1 Reconstructing Feature Names](#451-reconstructing-feature-names)
+    - [4.5.2 Extracting Importance Values](#452-extracting-importance-values)
+  - [4.6 Evaluation & Prediction Scripts](#46-evaluation--prediction-scripts)
+    - [4.6.1 `evaluate_model.py`](#461-evaluate_modelpy)
+    - [4.6.2 `predict_movie.py`](#462-predict_moviepy)
+    - [4.6.3 `app_predict.py`](#463-app_predictpy)
+  - [4.7 Automation — `run_project.py`](#47-automation--run_projectpy)    
+- [5 Evaluation & Analysis](#5-evaluation--analysis)
+  - [5.1 Learning Curve](#51-learning-curve)
+    - [5.1.1 Interpretation](#511-interpretation)
+  - [5.2 Feature Importance Analysis](#52-feature-importance-analysis)
+    - [5.2.1 Method](#521-method)
+    - [5.2.2 Expected Output Format](#522-expected-output-format)
+    - [5.2.3 Observations](#523-observations)
+  - [5.3 Summary](#53-summary)
+- [6 Conclusion](#6-conclusion)
+  - [6.1 RSME Evaluation](#61-comparing-the-models-rmse-to-real-world-expectations)
+  - [6.2 RSME Improvements](#62-how-the-rmse-could-be-improved)
+  - [6.3 What Makes A Good Movie](#63-what-makes-a-good-movie)
+- [7 Installation & Setup Guide](#7-installation--setup-guide)
+  - [7.1 Requirements](#71-requirements)
+  - [7.2 Download the Project](#72-download-the-project)
+  - [7.3 Download the Dataset (HuggingFace)](#73-download-the-dataset-huggingface)
+  - [7.4 Navigate into the Project Directory](#74-navigate-into-the-project-directory)
+  - [7.5 Set Up the Virtual Environment (create_envbat)](#75-set-up-the-virtual-environment-create_envbat)
+  - [7.6 Run the Full Pipeline](#76-run-the-full-pipeline)
+  - [7.7 Evaluate the Model](#77-evaluate-the-model)
+  - [7.8 Predict Ratings for New Movies](#78-predict-ratings-for-new-movies)
+    - [7.8.1 Interactive CLI Tool](#781-interactive-cli-tool)
+    - [7.8.2 Programmatic Usage](#782-programmatic-usage)
+  - [7.9 Reactivating the Virtual Environment](#79-reactivating-the-virtual-environment)
+- [8 Related Work](#8-related-work)
+  - [8.1 Python Libraries and Tools](#81-python-libraries-and-tools)
+  - [8.2 Related Projects](#82-related-projects)
 
 
 ---
@@ -209,11 +234,411 @@ The result is a practical and balanced approach that avoids unnecessary complexi
 
 ---
 
-# 4 Evaluation & Analysis
+# 4 Code Explanation
+
+This chapter explains the full architecture of the movie rating prediction system, including data cleaning, feature engineering, model training, feature importance extraction, prediction scripts, and automation.  
+It provides a step-by-step technical walkthrough of how each component works internally.
+
+## 4.1 Configuration & Utilities
+
+### 4.1.1 `config.py` – Central constants
+
+Here defined:
+
+- `ALLOWED_COLUMNS`  
+  The only columns the model is allowed to use.  
+  → Everything else gets ignored to avoid letting the model learn “random artifacts”.
+
+- Minimum numeric thresholds:
+  ```python
+  MIN_BUDGET = 1
+  MIN_REVENUE = 1
+  MIN_VOTE_COUNT = 1
+  ```
+  Movies with zero budget/revenue/votes are often invalid entries → removed.
+
+- File paths:
+  ```python
+  RAW_DATASET_PATH = "data/movies_dataset.csv"
+  CLEAN_DATASET_PATH = "data/movies_dataset_clean.csv"
+  ```
+
+The idea:  
+Keep all configuration values in one place.  
+If paths or boundaries change later, nothing breaks.
+
+---
+
+### 4.1.2 `utils.py` – Small helper functions
+
+Three simple but very important utilities.
+
+#### `clean_numeric(df, columns)`
+
+Converts text-like numeric columns into real numbers:
+
+```python
+pd.to_numeric(..., errors="coerce")
+```
+
+Invalid numbers → `NaN`.
+
+#### `drop_invalid(df, conditions)`
+
+You pass a list of boolean conditions (e.g. `df["budget"] >= MIN_BUDGET`).  
+It applies them sequentially:
+
+→ Only rows satisfying all conditions remain.
+
+#### `require_text_fields(df, fields)`
+
+Drops rows where any required text field is missing.
+
+This enforces data completeness.
+
+**Philosophy:**  
+Garbage in → garbage out.  
+Only clean, meaningful data goes into the model.
+
+---
+
+## 4.2 Data Cleaning (`data_cleaning.py`)
+
+Main function: `clean_dataset()`.
+
+### 4.2.1 Step-by-step
+
+1. **Read CSV**
+   ```python
+   df = pd.read_csv(input_path)
+   ```
+
+2. **Keep only allowed columns**
+   ```python
+   df = df[ALLOWED_COLUMNS].copy()
+   ```
+
+3. **Convert numeric columns**  
+   Budget, revenue, runtime, etc. all become real numbers.  
+   Invalid values → `NaN`.
+
+4. **Filter invalid rows**  
+   Applied conditions include:
+   ```python
+   df["budget"] >= MIN_BUDGET
+   df["revenue"] >= MIN_REVENUE
+   df["vote_count"] >= MIN_VOTE_COUNT
+   df["vote_average"].notna()
+   ```
+
+   **Why `vote_count` filter?**  
+   Because a movie with 3 votes and rating 9.8 is meaningless.
+
+5. **Ensure text fields are present**  
+   e.g. `overview`, `genres`, `credits`, etc.
+
+6. **Reset index & save**
+   ```python
+   df.to_csv(output_path, index=False)
+   ```
+
+**Final result:**  
+A clean dataset of ~9,270 usable movie entries.
+
+---
+
+## 4.3 Feature Engineering (`feature_engineering.py`)
+
+This is where text + numeric data turns into machine-learnable vectors.
+
+### 4.3.1 Helper `_split_field`
+
+Converts `"Action-Crime"` → `["Action", "Crime"]`.  
+
+If empty or NaN → empty list.  
+
+Essential for `MultiLabelBinarizer`.
+
+---
+
+### 4.3.2 Building encoders (`build_encoders(df)`)
+
+#### Genres
+
+```python
+mlb_genres = MultiLabelBinarizer()
+mlb_genres.fit(genres_list)
+```
+
+Output:  
+Binary matrix with columns per genre.
+
+#### Actors (`credits`) and Companies (`production_companies`)
+
+Same approach with `MultiLabelBinarizer`.
+
+#### Language
+
+```python
+OneHotEncoder(sparse_output=False, handle_unknown="ignore")
+```
+
+Creates dummy variables like `lang_en`, `lang_fr`, etc.
+
+Unknown languages during prediction → ignored instead of causing errors.
+
+#### TF-IDF for Overview text
+
+```python
+TfidfVectorizer(max_features=5000, stop_words="english")
+```
+
+This produces a 5,000-dimensional weighted word vector for each movie overview.
+
+TF-IDF downweights frequent words and highlights informative ones.
+
+---
+
+### 4.3.3 Transforming DataFrame → X, y
+
+The final feature vector is built via:
+
+- numeric features  
+- + genres (multilabel)  
+- + companies  
+- + credits  
+- + language one-hot  
+- + TF-IDF overview (5000-dim)
+
+All combined using:
+
+```python
+np.hstack([...])
+```
+
+Output:
+
+- `X`: large matrix containing everything  
+- `y`: the target (`vote_average`)
+
+The order matters later for feature importance reconstruction.
+
+---
+
+### 4.3.4 Preprocessing with optional saving
+
+`preprocess_data`:
+
+- builds encoders  
+- transforms the full dataset into `X` and `y`  
+- optionally saves encoders to disk.
+
+---
+
+### 4.3.5 Preprocess a single movie (for prediction)
+
+`preprocess_single_input()` does exactly the same encoding but for one row only.
+
+This keeps predictions consistent with training data format.
+
+---
+
+## 4.4 Training with XGBoost (`train_model.py`)
+
+### 4.4.1 Setup
+
+Creates folders: `logs`, `models`, `plots`.
+
+Defines paths:
+
+- `"models/encoders.pkl"`
+- `"models/movie_xgb.json"`
+- `"plots/learning_curve.png"`
+
+---
+
+### 4.4.2 Load, preprocess, split
+
+Uses the cleaned dataset, applies preprocessing, and performs an 80/20 train-test split with reproducibility (`random_state=42`).
+
+Creates `DMatrix` objects — internal optimized representations for XGBoost.
+
+---
+
+### 4.4.3 Model parameters
+
+```python
+objective: reg:squarederror
+eval_metric: rmse
+eta: 0.05
+max_depth: 8
+subsample: 0.8
+colsample_bytree: 0.8
+```
+
+→ Balanced mix of learning power + overfitting control.
+
+---
+
+### 4.4.4 Training loop (custom boosting step-by-step)
+
+Instead of:
+
+```python
+xgb.train(..., num_boost_round=300)
+```
+
+you train one tree per loop iteration, and after each iteration:
+
+- compute train RMSE  
+- compute test RMSE  
+- store results for plotting  
+
+This gives a learning curve that shows when the model starts overfitting.
+
+Finally:
+
+- save model  
+- save log  
+- plot learning curve  
+
+---
+
+## 4.5 Feature Importance (`feature_importance.py`)
+
+Goal: show which genres, actors, words, etc. influence predictions.
+
+### 4.5.1 Reconstruct feature names
+
+You rebuild the exact feature order:
+
+- numeric  
+- genres  
+- companies  
+- cast  
+- language  
+- tf-idf words  
+
+For example:
+
+- `genre_Action`  
+- `company_Warner Bros`  
+- `cast_Leonardo DiCaprio`  
+- `tfidf_space`  
+- `tfidf_dark`  
+- ...
+
+---
+
+### 4.5.2 Extract importance values
+
+XGBoost returns importance in this form:
+
+```python
+{"f0": 123.4, "f42": 56.7, ...}
+```
+
+`f0` means the feature at index 0 in your feature list.
+
+You map each `"fX"` to its real name, sort them, and save as CSV.
+
+Metric used: **gain**  
+→ “How much this feature reduced loss in the trees”.
+
+---
+
+## 4.6 Evaluation & Prediction Scripts
+
+### 4.6.1 `evaluate_model.py`
+
+- Loads clean dataset  
+- Finds a film by title  
+- Converts that row using the same preprocessing pipeline  
+- Predicts rating  
+- Compares:
+
+  - true rating  
+  - predicted rating  
+  - absolute error  
+
+Great for sanity-checking the model.
+
+<img width="2519" height="348" alt="image2" src="https://github.com/user-attachments/assets/36b3c6c9-c801-46b0-9dca-a9b2c5973ba0" />
+
+---
+
+### 4.6.2 `predict_movie.py`
+
+Takes a Python dict:
+
+```python
+{"title": "...", "genres": "...", ...}
+```
+
+Then:
+
+- loads model + encoders  
+- preprocesses the input  
+- predicts  
+- returns a float  
+
+Contains an example.
+
+<img width="2532" height="578" alt="image" src="https://github.com/user-attachments/assets/ed416e94-1eaa-455a-b5a7-e0e14354ebcb" />
+
+---
+
+### 4.6.3 `app_predict.py`
+
+A terminal-based interactive tool.
+
+Asks the user for:
+
+- title  
+- genres  
+- language  
+- overview  
+- popularity  
+- budget  
+- revenue  
+- runtime  
+- vote count  
+- actors  
+
+Then prints:
+
+```text
+Predicted rating: ⭐ 7.52 / 10
+```
+
+This is essentially your CLI application.
+
+---
+
+## 4.7 Automation – `run_project.py`
+
+A simple pipeline runner:
+
+```text
+print("Cleaning dataset...")
+run data_cleaning.py
+
+print("Training model...")
+run train_model.py
+```
+
+Allows running the entire pipeline with:
+
+```bash
+python run_project.py
+```
+---
+
+# 5 Evaluation & Analysis
 
 The evaluation of this project focuses on two main aspects: the learning behavior of the model during training and the contribution of individual features to the prediction outcome.
 
-## 4.1. Learning Curve
+## 5.1. Learning Curve
 
 The learning curve visualizes how the Root Mean Squared Error (RMSE) evolves across 300 boosting rounds. Both the training and test RMSE are recorded after each iteration. This allows an assessment of model convergence and helps identify potential overfitting.
 
@@ -221,7 +646,7 @@ The plot below shows the training and validation RMSE:
 
 ![Learning Curve](plots/learning_curve.png)
 
-### 4.1.1 Interpretation
+### 5.1.1 Interpretation
 
 - The training RMSE decreases continuously and reaches values below 0.50.
 - The test RMSE decreases rapidly in the early rounds and stabilizes around 0.79.
@@ -232,11 +657,11 @@ Overall, the learning curve shows that the model learns steadily and works well 
 
 ---
 
-## 4.2 Feature Importance Analysis
+## 5.2 Feature Importance Analysis
 
 To determine which metadata attributes most strongly influence the predicted movie ratings, a feature importance analysis was performed using the trained XGBoost model. This analysis reconstructs the full preprocessing feature space and aligns it with XGBoost’s internal feature indices to obtain interpretable importance scores.
 
-### 4.2.1 Method
+### 5.2.1 Method
 
 The analysis proceeds as follows:
 
@@ -255,7 +680,7 @@ The analysis proceeds as follows:
 /data/feature_importance_words.csv
 ```
 
-### 4.2.2 Expected Output Format
+### 5.2.2 Expected Output Format
 
 The output file contains two columns—feature name and importance—sorted in descending order:
 
@@ -271,7 +696,7 @@ tfidf_dark,7.1150
 
 This representation enables detailed inspection of which textual, categorical, or numerical inputs contribute most strongly to the model’s predictions.
 
-### 4.2.3 Observations
+### 5.2.3 Observations
 
 The most influential features fall into three main groups:
 
@@ -289,7 +714,7 @@ Although numerical features (e.g., budget, popularity) contribute meaningfully, 
 
 ---
 
-## 4.3 Summary
+## 5.3 Summary
 
 The evaluation demonstrates that:
 
@@ -302,11 +727,11 @@ Overall, these results confirm the suitability of the chosen preprocessing strat
 
 ---
 
-# 5 Conclusion
+# 6 Conclusion
 
 The conclusion of this project summarizes the model’s predictive performance, the factors influencing its error rate and the broader insights gained about what drives movie ratings.
 
-## 5.1 Comparing the Model’s RMSE to Real-World Expectations
+## 6.1 Comparing the Model’s RMSE to Real-World Expectations
 
 - The model achieved a test RMSE of ~0.79 on a 0–10 rating scale.
 
@@ -320,7 +745,7 @@ The conclusion of this project summarizes the model’s predictive performance, 
 
 ---
 
-## 5.2 How the RMSE Could Be Improved
+## 6.2 How the RMSE Could Be Improved
 
 Potential Improvements:
 
@@ -345,7 +770,7 @@ Why We Did Not Implement These?
 
 ---
 
-## 5.3 What Makes a Good Movie
+## 6.3 What Makes a Good Movie
 
 - TF-IDF terms from the overview text were the strongest predictors, showing narrative themes heavily influence ratings.
 
@@ -361,11 +786,11 @@ Why We Did Not Implement These?
 
 ---
 
-# 6 Installation & Setup Guide
+# 7 Installation & Setup Guide
 
 This guide explains how to install and run the project from scratch using the provided setup scripts.
 
-## 6.1 Requirements
+## 7.1 Requirements
 
 Before starting, make sure the following software is installed:
 
@@ -381,7 +806,7 @@ Before starting, make sure the following software is installed:
 
 ---
 
-## 6.2 Download the Project
+## 7.2 Download the Project
 
 Clone the repository using Git:
 
@@ -392,7 +817,7 @@ git clone https://github.com/maredios/AI-predicting-a-film-s-rating.git
 
 ---
 
-## 6.3 Download the Dataset (HuggingFace)
+## 7.3 Download the Dataset (HuggingFace)
 
 Dataset source:  
 https://huggingface.co/datasets/wykonos/movies
@@ -409,7 +834,7 @@ https://huggingface.co/datasets/wykonos/movies
 
 ---
 
-## 6.4 Navigate into the Project Directory
+## 7.4 Navigate into the Project Directory
 
 If you are not already inside the project folder, switch into it:
 
@@ -436,7 +861,7 @@ feature_engineering.py
 
 ---
 
-## 6.5 Set Up the Virtual Environment (create_env.bat)
+## 7.5 Set Up the Virtual Environment (create_env.bat)
 
 PowerShell does not execute files from the current directory automatically.  
 Use `.\` to run the setup script:
@@ -455,7 +880,7 @@ After it completes, everything is installed and ready.
 
 ---
 
-## 6.6 Run the Full Pipeline
+## 7.6 Run the Full Pipeline
 
 Execute the entire cleaning + training workflow:
 
@@ -477,7 +902,7 @@ This script will:
 
 ---
 
-## 6.7 Evaluate the Model
+## 7.7 Evaluate the Model
 
 Test the model on an existing movie:
 
@@ -490,9 +915,9 @@ The script prints the true rating, predicted rating and the absolute error.
 
 ---
 
-## 6.8 Predict Ratings for New Movies
+## 7.8 Predict Ratings for New Movies
 
-### 6.8.1 Interactive CLI Tool
+### 7.8.1 Interactive CLI Tool
 ```powershell
 python app_predict.py
 ```
@@ -500,7 +925,7 @@ python app_predict.py
 Enter the requested details (genres, overview, cast, etc.)  
 The predicted rating will be displayed afterwards.
 
-### 6.8.2 Programmatic Usage
+### 7.8.2 Programmatic Usage
 ```python
 from predict_movie import predict_movie
 
@@ -524,7 +949,7 @@ print(prediction)
 
 ---
 
-## 6.9 Reactivating the Virtual Environment
+## 7.9 Reactivating the Virtual Environment
 
 When returning to the project, activate the environment again:
 
@@ -542,11 +967,11 @@ deactivate
 
 ---
 
-# 7 Related Work
+# 8 Related Work
 
 Tools, libraries, blogs, or any documentation that we have used to do this project
 
-## 7.1 Python Libraries and Tools
+## 8.1 Python Libraries and Tools
 
 Data Processing
 
@@ -574,7 +999,7 @@ Persistence / Utilities
 
 - OS module - used for directory creation and file path handling.
 
-## 7.2 Related Projects
+## 8.2 Related Projects
 
 IMDb Movie Rating Prediction 2023 | Artificial Intelligence Project
  - Youtube Link: https://youtu.be/ejrhnhov4T4?si=OhIdJsal8mA1h5Gj
