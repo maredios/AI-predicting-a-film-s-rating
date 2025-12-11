@@ -5,6 +5,9 @@ Antoine Maia-Sudre, Computer Science Department, Hanyang University, antoine.mai
 Joel Suhner, Finance Department, Hanyang University, joel.suhner@gmail.com  
 Yannick Matteo Reichle, Information Systems Department, Hanyang University, yannick.reichle@gmail.com  
 
+# Link for the presentation
+
+https://youtu.be/yo_9SUUS5pM
 
 ## Table of Contents
 - [1 Introduction](#1-introduction)
