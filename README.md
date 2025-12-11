@@ -236,7 +236,7 @@ The result is a practical and balanced approach that avoids unnecessary complexi
 
 # 4 Code Explanation
 
-This chapter explains the full architecture of the movie rating prediction system, including data cleaning, feature engineering, model training, feature importance extraction, prediction scripts, and automation.  
+This chapter explains the full architecture of the movie rating prediction system, including data cleaning, feature engineering, model training, feature importance extraction, prediction scriptsand automation.  
 It provides a step-by-step technical walkthrough of how each component works internally.
 
 ## 4.1 Configuration & Utilities
@@ -459,7 +459,7 @@ Defines paths:
 
 ### 4.4.2 Load, preprocess, split
 
-Uses the cleaned dataset, applies preprocessing, and performs an 80/20 train-test split with reproducibility (`random_state=42`).
+Uses the cleaned dataset, applies preprocessingand performs an 80/20 train-test split with reproducibility (`random_state=42`).
 
 Creates `DMatrix` objects — internal optimized representations for XGBoost.
 
@@ -488,7 +488,7 @@ Instead of:
 xgb.train(..., num_boost_round=300)
 ```
 
-you train one tree per loop iteration, and after each iteration:
+you train one tree per loop iterationand after each iteration:
 
 - compute train RMSE  
 - compute test RMSE  
@@ -540,7 +540,7 @@ XGBoost returns importance in this form:
 
 `f0` means the feature at index 0 in your feature list.
 
-You map each `"fX"` to its real name, sort them, and save as CSV.
+You map each `"fX"` to its real name, sort themand save as CSV.
 
 Metric used: **gain**  
 → “How much this feature reduced loss in the trees”.
@@ -721,7 +721,7 @@ The evaluation demonstrates that:
 - The model converges reliably with stable test performance.  
 - Overfitting is present but remains controlled through XGBoost’s regularization parameters.  
 - The feature importance analysis reveals clear and interpretable patterns aligned with the structure of movie metadata.  
-- Combining textual, categorical, and numerical inputs forms a rich feature space that captures multiple dimensions of film characteristics.
+- Combining textual, categoricaland numerical inputs forms a rich feature space that captures multiple dimensions of film characteristics.
 
 Overall, these results confirm the suitability of the chosen preprocessing strategy and model architecture for the task of rating prediction.
 
