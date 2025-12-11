@@ -54,6 +54,7 @@ https://youtu.be/yo_9SUUS5pM
   - [6.9 Reactivating the Virtual Environment](#69-reactivating-the-virtual-environment)
 - [7 Related Work](#7-related-work)
   - [7.1 Python Libraries and Tools](#71-python-libraries-and-tools)
+  - [7.2 Related Projects](#72-related-projects)
 
 
 ---
@@ -572,3 +573,9 @@ Persistence / Utilities
 - Pickle - used to save and load preprocessing encoders (encoders.pkl) for consistent training and inference.
 
 - OS module - used for directory creation and file path handling.
+
+## 7.2 Related Projects
+
+IMDb Movie Rating Prediction 2023 | Artificial Intelligence Project
+ - Youtube Link: https://youtu.be/ejrhnhov4T4?si=OhIdJsal8mA1h5Gj
+ - Google Drive for the Code: https://drive.google.com/file/d/12_qwFMhiA_hjYY8aYR284aZDGopU_wvo/view
